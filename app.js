@@ -1,11 +1,6 @@
 const express = require("express");
-// import morgan from "morgan";
-const morgan = require("express");
-// import cors from "cors";
-const cors = require("express");
-
-// import contactsRouter from "./routes/contactsRouter.js";
-
+const morgan = require("morgan");
+const cors = require("cors");
 const contactsRouter = require("./routes/contactsRouter.js");
 
 const app = express();
@@ -25,6 +20,8 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-app.listen(3000, () => {
+const PORT = 3000;
+
+app.listen(PORT, () => {
   console.log("Server is running. Use our API on port: 3000");
 });
