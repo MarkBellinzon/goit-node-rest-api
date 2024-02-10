@@ -5,7 +5,7 @@ const createContactSchema = Joi.object({
   email: Joi.string().email().required(),
   phone: Joi.string().required(),
  
-  // Дополнительные поля, которые могут быть необходимы для создания контакта
+
 });
 
 const updateContactSchema = Joi.object({
@@ -13,7 +13,7 @@ const updateContactSchema = Joi.object({
   email: Joi.string().email(),
   phone: Joi.string(),
   
-  // Дополнительные поля, которые могут быть обновлены в контакте
+ 
 });
 
 module.exports = { createContactSchema, updateContactSchema };
