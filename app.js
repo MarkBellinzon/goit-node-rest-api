@@ -20,8 +20,23 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-const PORT = 3000;
+// app.use("/api/contacts/:id", contactsRouter);
+
+// app.use("/api/contacts/:id", (req, res) => {
+//   const contactId = req.params.id;
+//   // Пошук контакту за його ідентифікатором
+//   const contact = contacts.find((contact) => contact.id === contactId);
+//   if (contact) {
+//     // Якщо контакт знайдено, повертаємо його відповідь
+//     res.json(contact);
+//   } else {
+//     // Якщо контакт не знайдено, повертаємо відповідь з помилкою 404
+//     res.status(404).json({ error: "Contact not found" });
+//   }
+// });
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("Server is running. Use our API on port: 3000");
+  console.log("Server is running. Use our API on port: ${PORT}");
 });

@@ -3,6 +3,7 @@ const {
   getContactById,
   removeContact,
   addContact,
+  updateContact,
 } = require("../services/contactsServices");
 const HttpError = require("../helpers/HttpError");
 
