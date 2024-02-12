@@ -6,6 +6,7 @@ const {
 } = require("../services/contactsServices");
 const HttpError = require("../helpers/HttpError");
 
+
 const getAllContacts = async (req, res) => {
   try {
     const contacts = await listContacts();
@@ -47,6 +48,7 @@ const deleteContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
+ 
   try {
     const { name, email, phone } = req.body;
     if (!name || !email || !phone) {
