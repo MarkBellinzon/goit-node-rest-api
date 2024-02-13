@@ -14,20 +14,3 @@ const updateContactSchema = Joi.object({
 
 module.exports = { createContactSchema, updateContactSchema };
 
-// const Joi = require("joi");
-
-// const createContactSchema = Joi.object({});
-
-// const updateContactSchema = Joi.object({});
-
-// module.exports = { createContactSchema, updateContactSchema };
-
-// import Joi from "joi";
-
-// export const createContactSchema = Joi.object({
-
-// })
-
-// export const updateContactSchema = Joi.object({
-
-// })
