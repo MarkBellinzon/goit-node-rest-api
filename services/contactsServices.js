@@ -3,6 +3,7 @@ const path = require("path");
 // const { nanoid } = require("nanoid");
 const crypto = require("crypto");
 
+
 const contactsPath = path.join(__dirname, "..", "db", "contacts.json");
 
 async function listContacts() {
@@ -41,18 +42,43 @@ async function addContact(name, email, phone) {
   return newContact;
 }
 
-// async function updateContact(contactId, data) {
+async function updateContacts(id, newData) {
+  // Отримуємо список контактів
+      const contacts = await listContacts();
+      // Перевіряємо чи є всі необхідні поля в нових даних
+      if (!newData.name || !newData.email || !newData.phone) {
+          return { status: 400, message: "Not found" };
+      }
+
+           // Пошук контакта за id
+      const index = contacts.findIndex(contact => contact.id === id);
+
+      if (index !== -1) {
+          // Знаходимо контакт і оновлюємо його дані
+          contacts[index] = { ...contacts[index], ...newData };
+
+          // Записуємо оновлені дані назад у файл contacts.json
+          await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+
+          // Повертаємо оновлений об'єкт контакту зі статусом 200
+          return { status: 200, data: contacts[index] };
+      } 
+  
+}
+
+
+// async function updateContacts(contactId, data) {
 //   // Перевіряємо, чи передано хоча б одне поле в об'єкті даних
 //   if (Object.keys(data).length === 0) {
 //     return { message: "Body must have at least one field" };
 //   }
 
-//   try {
-//     // Перевіряємо валідність даних за схемою updateContactSchema
-//     await updateContactSchema.validateAsync(data);
-//   } catch (error) {
-//     return { message: error.message };
-//   }
+//   // try {
+//   //   // Перевіряємо валідність даних за схемою updateContactSchema
+//   //   await updateContactSchema.validateAsync(data);
+//   // } catch (error) {
+//   //   return { message: error.message };
+//   // }
 
 //   const contacts = await listContacts();
 //   const index = contacts.findIndex((el) => el.id === contactId);
@@ -74,4 +100,6 @@ module.exports = {
   getContactById,
   removeContact,
   addContact,
+  updateContacts
+ 
 };
