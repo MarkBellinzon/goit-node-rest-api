@@ -40,23 +40,6 @@ async function addContact(name, email, phone) {
   return newContact;
 }
 
-// async function updateContacts(id, newData) {
-//   const contacts = await listContacts();
-
-//   if (!newData.name || !newData.email || !newData.phone) {
-//     return { status: 404, message: "Not found" };
-//   }
-
-//   const index = contacts.findIndex((contact) => contact.id === id);
-
-//   if (index !== -1) {
-//     contacts[index] = { ...contacts[index], ...newData };
-
-//     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-//     return { status: 200, data: contacts[index] };
-//   }
-// }
-
 async function updateContacts(id, newData) {
   const contacts = await listContacts();
 

@@ -62,37 +62,15 @@ const createContact = async (req, res) => {
   }
 };
 
-// const updateContact = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { name, email, phone } = req.body;
-
-//     if (!name || !email || !phone) {
-//       return res
-//         .status(400)
-//         .json({ message: "Body must have at least one field" });
-//     }
-
-//     const result = await updateContacts(id, { name, email, phone });
-
-//     if (result.status === 200) {
-//       return res.status(200).json(result.data);
-//     } else if (result.status === 404) {
-//       return res.status(404).json({ message: "Not found" });
-//     } 
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(404).json({ message: "Not found" });
-//   }
-// };
-
 const updateContact = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, phone } = req.body;
 
     if (!(name || email || phone)) {
-      return res.status(400).json({ message: "Body must have at least one field" });
+      return res
+        .status(400)
+        .json({ message: "Body must have at least one field" });
     }
 
     const updatedFields = {};
@@ -112,7 +90,7 @@ const updateContact = async (req, res) => {
       return res.status(200).json(result.data);
     } else if (result.status === 404) {
       return res.status(404).json({ message: "Not found" });
-    } 
+    }
   } catch (error) {
     console.error(error);
     return res.status(404).json({ message: "Not found" });
@@ -126,5 +104,3 @@ module.exports = {
   createContact,
   updateContact,
 };
-
-
