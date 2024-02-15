@@ -3,7 +3,6 @@ const path = require("path");
 
 const crypto = require("crypto");
 
-
 const contactsPath = path.join(__dirname, "..", "db", "contacts.json");
 
 async function listContacts() {
@@ -30,7 +29,6 @@ async function removeContact(contactId) {
 async function addContact(name, email, phone) {
   const contacts = await listContacts();
   const newContact = {
- 
     id: crypto.randomUUID(),
     name,
     email,
@@ -42,25 +40,48 @@ async function addContact(name, email, phone) {
   return newContact;
 }
 
+// async function updateContacts(id, newData) {
+//   const contacts = await listContacts();
+
+//   if (!newData.name || !newData.email || !newData.phone) {
+//     return { status: 404, message: "Not found" };
+//   }
+
+//   const index = contacts.findIndex((contact) => contact.id === id);
+
+//   if (index !== -1) {
+//     contacts[index] = { ...contacts[index], ...newData };
+
+//     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+//     return { status: 200, data: contacts[index] };
+//   }
+// }
+
 async function updateContacts(id, newData) {
- 
-      const contacts = await listContacts();
-     
-      if (!newData.name || !newData.email || !newData.phone) {
-          return { status: 400, message: "Not found" };
-      }
+  const contacts = await listContacts();
 
-          
-      const index = contacts.findIndex(contact => contact.id === id);
+  const index = contacts.findIndex((contact) => contact.id === id);
 
-      if (index !== -1) {
-         
-          contacts[index] = { ...contacts[index], ...newData };
+  if (index !== -1) {
+    const updatedContact = { ...contacts[index] };
 
-          await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-                   return { status: 200, data: contacts[index] };
-      } 
-  
+    if (newData.name !== undefined) {
+      updatedContact.name = newData.name;
+    }
+    if (newData.email !== undefined) {
+      updatedContact.email = newData.email;
+    }
+    if (newData.phone !== undefined) {
+      updatedContact.phone = newData.phone;
+    }
+
+    contacts[index] = updatedContact;
+
+    await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+    return { status: 200, data: updatedContact };
+  } else {
+    return { status: 404, message: "Not found" };
+  }
 }
 
 
@@ -69,6 +90,5 @@ module.exports = {
   getContactById,
   removeContact,
   addContact,
-  updateContacts
- 
+  updateContacts,
 };
