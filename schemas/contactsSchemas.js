@@ -8,6 +8,7 @@ const createContactSchema = Joi.object({
     .max(20)
     .required()
     .pattern(/\+?[0-9\s\-\(\)]+/),
+  favorite: Joi.boolean(),
 });
 
 const updateContactSchema = Joi.object({
@@ -17,6 +18,7 @@ const updateContactSchema = Joi.object({
     .min(4)
     .max(20)
     .pattern(/\+?[0-9\s\-\(\)]+/),
+  favorite: Joi.boolean().required(),
 });
 
 module.exports = { createContactSchema, updateContactSchema };

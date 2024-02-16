@@ -1,9 +1,15 @@
 const fs = require("fs/promises");
 const path = require("path");
+const Contact = require("../model/contacts");
 
 const crypto = require("crypto");
 
-const contactsPath = path.join(__dirname, "..", "db", "contacts.json");
+const contactsPath = path.join(
+  __dirname,
+  "..",
+  "db",
+  "db-contacts.contacts.json"
+);
 
 async function listContacts() {
   const contacts = await fs.readFile(contactsPath);
@@ -11,14 +17,14 @@ async function listContacts() {
 }
 
 async function getContactById(contactId) {
-  const contacts = await listContacts();
-  const contact = contacts.find((el) => el.id === contactId);
+  const contacts = await listContacts(Contact);
+  const contact = contacts.find((el) => el._id === contactId);
   return contact || null;
 }
 
 async function removeContact(contactId) {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((el) => el.id === contactId);
+  const contacts = await listContacts(Contact);
+  const index = contacts.findIndex((el) => el._id === contactId);
   if (index === -1) return null;
 
   const deletedContact = contacts.splice(index, 1);
@@ -26,13 +32,14 @@ async function removeContact(contactId) {
   return deletedContact[0];
 }
 
-async function addContact(name, email, phone) {
-  const contacts = await listContacts();
+async function addContact(name, email, phone, favorite) {
+  const contacts = await listContacts(Contact);
   const newContact = {
-    id: crypto.randomUUID(),
+    _id: crypto.randomUUID(),
     name,
     email,
     phone,
+    favorite,
   };
 
   contacts.push(newContact);
@@ -40,10 +47,10 @@ async function addContact(name, email, phone) {
   return newContact;
 }
 
-async function updateContacts(id, newData) {
-  const contacts = await listContacts();
+async function updateContacts(_id, newData) {
+  const contacts = await listContacts(Contact);
 
-  const index = contacts.findIndex((contact) => contact.id === id);
+  const index = contacts.findIndex((contact) => contact._id === _id);
 
   if (index !== -1) {
     const updatedContact = { ...contacts[index] };
@@ -66,7 +73,6 @@ async function updateContacts(id, newData) {
     return { status: 404, message: "Not found" };
   }
 }
-
 
 module.exports = {
   listContacts,
