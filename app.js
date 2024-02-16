@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const DB_HOST =
   "mongodb+srv://MarkBell:rOpZvwVQkR6ipzdk@cluster0.w2gctqm.mongodb.net/db-contacts?retryWrites=true&w=majority";
 
-// mongoose.set("strictquery", true);
+mongoose.set("strictQuery", true);
 
 mongoose
   .connect(DB_HOST)
