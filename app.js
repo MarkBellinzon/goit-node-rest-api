@@ -1,7 +1,27 @@
+// rOpZvwVQkR6ipzdk
+
+
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const contactsRouter = require("./routes/contactsRouter.js");
+const mongoose = require('mongoose');
+const DB_HOST = "mongodb+srv://MarkBell:rOpZvwVQkR6ipzdk@cluster0.w2gctqm.mongodb.net/db-contacts?retryWrites=true&w=majority";
+
+// mongoose.set('strictquery', true);
+
+mongoose.connect(DB_HOST)
+.then(() => {
+app.listen(PORT, () => {
+  console.log(`Server is running. Use our API on port: ${PORT}`);
+})})
+.catch(error => {
+  console.log(error.message);
+  process.exit(1);
+})
+
+
+
 
 
 const app = express();
@@ -24,6 +44,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running. Use our API on port: ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server is running. Use our API on port: ${PORT}`);
+// });
