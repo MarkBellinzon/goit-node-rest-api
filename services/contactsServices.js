@@ -4,12 +4,7 @@ const Contact = require("../model/contacts");
 
 const crypto = require("crypto");
 
-const contactsPath = path.join(
-  __dirname,
-  "..",
-  "db",
-  "db-contacts.contacts.json"
-);
+const contactsPath = path.join(__dirname, "..", "db", "contacts.json");
 
 async function listContacts() {
   const contacts = await fs.readFile(contactsPath);
