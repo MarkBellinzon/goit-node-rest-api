@@ -112,13 +112,13 @@ const updateStatusContact = async (req, res) => {
     );
 
     if (!updatedContact) {
-      return res.status(404).json({ message: "Contact not found" });
+      return res.status(404).json({ message: "Not found" });
     }
 
     res.status(200).json(updatedContact);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(404).json({ message: "Not found" });
   }
 };
 
