@@ -67,18 +67,7 @@ const updateContact = async (req, res) => {
         .json({ message: "Body must have at least one field" });
     }
 
-    const updatedFields = {};
-    if (name !== undefined) {
-      updatedFields.name = name;
-    }
-    if (email !== undefined) {
-      updatedFields.email = email;
-    }
-    if (phone !== undefined) {
-      updatedFields.phone = phone;
-    }
-
-    const updatedContact = await Contact.findByIdAndUpdate(id, updatedFields, {
+    const updatedContact = await Contact.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     if (!updatedContact) {
@@ -96,12 +85,6 @@ const updateStatusContact = async (req, res) => {
   try {
     const { contactId } = req.params;
     const { favorite } = req.body;
-
-    if (favorite === undefined) {
-      return res
-        .status(400)
-        .json({ message: "Body must have 'favorite' field" });
-    }
 
     const updatedFields = { favorite };
 
