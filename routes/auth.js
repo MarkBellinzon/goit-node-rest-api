@@ -11,6 +11,6 @@ authRouter.get("/", getAllUsers);
 
 // authRouter.get("/:id/register", validateBody(schemas.registerSchema), getOneUsers);
 
-authRouter.post("/register", validateBody(schemas.registerSchema), userAdd);
+authRouter.post("/", validateBody(schemas.registerSchema), userAdd);
 
 module.exports = authRouter;
