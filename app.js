@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const contactsRouter = require("./routes/contactsRouter.js");
 const mongoose = require("mongoose");
-const {DB_HOST} = require('./config.js')
+const {DB_HOST} = process.env;
 // const DB_HOST =
 //   "mongodb+srv://MarkBell:rOpZvwVQkR6ipzdk@cluster0.w2gctqm.mongodb.net/db-contacts?retryWrites=true&w=majority";
 
