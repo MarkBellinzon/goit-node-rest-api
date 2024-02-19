@@ -6,7 +6,7 @@ const cors = require("cors");
 // const isValidId = require("../helpers/isValidId");
 const contactsRouter = require("./routes/contactsRouter.js");
 const mongoose = require("mongoose");
-const authRouter = require("./routes/auth.js")
+const authRouter = require("./routes/users.js")
 
 // const dotenv = require('dotenv');
 // dotenv.config();
@@ -48,5 +48,5 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-// const PORT = process.env.PORT || 3000;
+
 

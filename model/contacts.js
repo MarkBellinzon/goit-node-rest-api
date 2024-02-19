@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const {isValidById} = require("../helpers/isValidId");
 const {Schema, model} = require("mongoose");
 
-const contactSchema = new Schema({
+const contactSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Set name for contact"],
@@ -25,6 +25,6 @@ const contactSchema = new Schema({
 
 contactSchema.post("save", isValidById);
 
-const Contact = model("Contact", contactSchema);
+const Contact = mongoose.model("Contact", contactSchema);
 
 module.exports = Contact;
