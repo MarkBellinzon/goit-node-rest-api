@@ -6,6 +6,7 @@ const cors = require("cors");
 // const isValidId = require("../helpers/isValidId");
 const contactsRouter = require("./routes/contactsRouter.js");
 const mongoose = require("mongoose");
+const authRouter = require("./routes/auth.js")
 
 // const dotenv = require('dotenv');
 // dotenv.config();
@@ -34,6 +35,8 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
+
+app.use("/api/users", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((_, res) => {
