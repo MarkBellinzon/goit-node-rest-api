@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {isValidById} = require("../helpers/isValidId");
 
 const contactSchema = new mongoose.Schema({
   name: {
@@ -15,7 +16,9 @@ const contactSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-});
+}, {versionKeys: false});
+
+contactSchema.post("save", isValidById);
 
 const Contact = mongoose.model("Contact", contactSchema);
 

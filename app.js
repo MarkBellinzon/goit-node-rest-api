@@ -3,13 +3,15 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+// const isValidId = require("../helpers/isValidId");
 const contactsRouter = require("./routes/contactsRouter.js");
 const mongoose = require("mongoose");
 
 // const dotenv = require('dotenv');
-require("dotenv").config();
-const {DB_HOST} = process.env;
 // dotenv.config();
+require("dotenv").config();
+const {DB_HOST, PORT = 3000} = process.env;
+
 
 mongoose.set("strictQuery", true);
 
@@ -43,5 +45,5 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
