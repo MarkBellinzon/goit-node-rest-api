@@ -5,9 +5,11 @@ const morgan = require("morgan");
 const cors = require("cors");
 const contactsRouter = require("./routes/contactsRouter.js");
 const mongoose = require("mongoose");
+
+// const dotenv = require('dotenv');
+require("dotenv").config();
 const {DB_HOST} = process.env;
-// const DB_HOST =
-//   "mongodb+srv://MarkBell:rOpZvwVQkR6ipzdk@cluster0.w2gctqm.mongodb.net/db-contacts?retryWrites=true&w=majority";
+// dotenv.config();
 
 mongoose.set("strictQuery", true);
 
@@ -43,13 +45,3 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-// app.listen(PORT, () => {
-//   console.log(`Server is running. Use our API on port: ${PORT}`);
-// });
-//  {
-//     "_id": "65cf6b1252de0d9e0d86a9b3",
-//     "name": "Allen Raymond",
-//     "email": "nulla.ante@vestibul.co.uk",
-//     "phone": "(992) 914-3792",
-//     "favorite": false
-//   },
