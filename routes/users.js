@@ -1,13 +1,13 @@
 const express = require("express");
 const validateBody = require("../helpers/validateBody.js");
 const { schemas } = require("../model/users.js");
-const { register
+const { register, getAllUsers
     } = require("../controllers/users.js")
 
 const authRouter = express.Router();
 
 // sign up
-// authRouter.get("/", getAllUsers);
+authRouter.get("/", getAllUsers);
 
 // authRouter.get("/:id/register", validateBody(schemas.registerSchema), getOneUsers);
 
