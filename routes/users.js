@@ -3,7 +3,7 @@ const validateBody = require("../helpers/validateBody.js");
 const { schemas } = require("../model/users.js");
 const { register, getAllUsers, login
     } = require("../controllers/users.js")
-    // const authenticate = require("../middleware/authenticate.js");
+    const authenticate = require("../middleware/authenticate.js");
 
 const authRouter = express.Router();
 
