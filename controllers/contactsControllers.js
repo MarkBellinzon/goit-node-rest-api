@@ -2,8 +2,9 @@ const HttpError = require("../helpers/HttpError");
 const Contact = require("../model/contacts");
 
 const getAllContacts = async (req, res) => {
+  const {id: owner} = req.user;
   try {
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({owner});
     res.status(200).json(contacts);
   } catch (error) {
     console.error(error);
@@ -42,13 +43,14 @@ const deleteContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
+  const {id: owner} = req.user;
   try {
     const { name, email, phone } = req.body;
     if (!name || !email || !phone) {
       res.status(400).json({ message: "Name, email, and phone are required" });
       return;
     }
-    const newContact = await Contact.create({ name, email, phone });
+    const newContact = await Contact.create({ ...req.body, owner });
     res.status(201).json(newContact);
   } catch (error) {
     console.error(error);
