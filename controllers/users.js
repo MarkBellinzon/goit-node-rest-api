@@ -1,8 +1,11 @@
 const { Users } = require("../model/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 // const HttpError = require("../helpers/HttpError");
 const {SECRET_KEY} = process.env;
+console.log(SECRET_KEY);
+
 
 const getAllUsers = async (req, res) => {
   const users = await Users.find();
@@ -26,23 +29,23 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await Users.findOne({ email });
     if (!user) {
-      res.status(401).json({ message: "Email or password invalid" });
+        return  res.status(401).json({ message: "Email or password invalid" });
     }
     const passwordCompare = await bcrypt.compare(password, user.password);
     if(!passwordCompare){
-        res.status(401).json({ message: "Email or password invalid" });
+        return  res.status(401).json({ message: "Email or password invalid" });
     }
 
     const payload = {
-        id: user._id
+        id: user._id,
     };
+
     const token = jwt.sign(payload, SECRET_KEY, {expiresIn: "23h"});
     res.json({
         token,
     })
 
   
-
 }
 
 
