@@ -1,19 +1,53 @@
 const { Users } = require("../model/users");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+// const HttpError = require("../helpers/HttpError");
+const {SECRET_KEY} = process.env;
 
 const getAllUsers = async (req, res) => {
   const users = await Users.find();
   res.status(200).json(users);
-  
 };
 
 const register = async (req, res) => {
-const newUser = await Users.create(req.body);
+  const { email, password } = req.body;
+  const user = await Users.findOne({ email });
+  if (user) {
+    res.status(409).json({ message: "Email already in use" });
+  }
 
-res.status(201).json(newUser);
+  const hashPassword = await bcrypt.hash(password, 10);
+
+  const newUser = await Users.create({...req.body, password: hashPassword});
+  res.status(201).json(newUser);
 };
 
-module.exports = {
-    register,
-    getAllUsers
+const login = async (req, res) => {
+    const { email, password } = req.body;
+    const user = await Users.findOne({ email });
+    if (!user) {
+      res.status(401).json({ message: "Email or password invalid" });
+    }
+    const passwordCompare = await bcrypt.compare(password, user.password);
+    if(!passwordCompare){
+        res.status(401).json({ message: "Email or password invalid" });
+    }
 
+    const payload = {
+        id: user._id
+    };
+    const token = jwt.sign(payload, SECRET_KEY, {expiresIn: "23h"});
+    res.json({
+        token,
+    })
+
+  
+
+}
+
+
+module.exports = {
+  register,
+  getAllUsers,
+  login,
 };

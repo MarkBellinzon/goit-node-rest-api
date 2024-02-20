@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 // const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-// const mongooseError  = require("../helpers/mongooseError");
+const mongooseError  = require("../helpers/mongooseError");
 
 const usersSchema = new mongoose.Schema(
   {
@@ -27,7 +27,7 @@ const usersSchema = new mongoose.Schema(
   { versionKey: false, timestamps: true }
 );
 
-// usersSchema.post("save", mongooseError);
+usersSchema.post("save", mongooseError);
 
 const registerSchema = Joi.object({
    password: Joi.string().min(3).max(255).required(),
@@ -39,7 +39,7 @@ const registerSchema = Joi.object({
 const loginSchema = Joi.object({
   password: Joi.string().min(3).max(255).required(),
   email: Joi.string().min(4).max(255).required().email(),
-  subscription: Joi.string().min(6).required(),
+  subscription: Joi.string().min(6),
   token: [Joi.string(), Joi.number()],
 });
 
