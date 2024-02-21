@@ -9,6 +9,7 @@ const createContactSchema = Joi.object({
     .required()
     .pattern(/\+?[0-9\s\-\(\)]+/),
   favorite: Joi.boolean(),
+ 
 });
 
 const updateContactSchema = Joi.object({

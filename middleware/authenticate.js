@@ -1,6 +1,7 @@
 const HttpError = require("../helpers/HttpError");
 const jwt = require("jsonwebtoken");
-const { User } = require("../model/users");
+const { Users } = require("../model/users");
+require("dotenv").config();
 
 const { SECRET_KEY } = process.env;
 
@@ -16,8 +17,8 @@ const authenticate = async (req, res, next) => {
   }
   try {
     const { id } = jwt.verify(token, SECRET_KEY);
-    const user = await User.findById(id);
-    if (!user || !user.token !== token) {
+    const user = await Users.findById(id);
+    if (!user || user.token !== token) {
       next(HttpError(401));
     }
     req.user = user;
