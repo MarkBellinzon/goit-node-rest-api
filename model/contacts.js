@@ -22,6 +22,11 @@ const contactSchema = new mongoose.Schema({
     ref: 'user',
     require: true,
   },
+  token: {
+    type: String,
+    default: "",
+  },
+
 }, {versionKeys: false});
 
 contactSchema.post("save", isValidById);

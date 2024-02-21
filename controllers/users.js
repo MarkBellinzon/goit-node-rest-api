@@ -52,8 +52,33 @@ const login = async (req, res) => {
   });
 };
 
+const getCurrent = async(req, res) =>{
+const {email, password} = req.user;
+
+res.json({
+  email,
+  password,
+ 
+})
+}
+
+
+const logout = async(req, res) =>{
+  const {_id} = req.user;
+
+  await Users.findByIdAndUpdate( _id, { token: ""});
+  
+  res.json({
+    message: "Logout succsess",
+   
+  })
+  }
+
+
 module.exports = {
   register,
   getAllUsers,
   login,
+  getCurrent,
+  logout,
 }

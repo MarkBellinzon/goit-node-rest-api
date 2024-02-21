@@ -3,13 +3,11 @@ const Contact = require("../model/contacts");
 
 const getAllContacts = async (req, res) => {
   const { id: owner } = req.user;
-  try {
-    const contacts = await Contact.find({ owner });
+  const { page = 1, limit = 20 } = req.query;
+	const skip = (page - 1) * limit;
+    const contacts = await Contact.find({ owner }, "-createdAt -updatedAt", {skip, limit}).populate("owner", "name email");
     res.status(200).json(contacts);
-  } catch (error) {
-    console.error(error);
-    res.status(404).json({ message: "Not found" });
-  }
+  
 };
 
 const getOneContact = async (req, res) => {

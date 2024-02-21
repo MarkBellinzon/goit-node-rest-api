@@ -7,10 +7,7 @@ const { SECRET_KEY } = process.env;
 
 const authenticate = async (req, res, next) => {
   const { authorization = "" } = req.headers;
-  // if (!authorization || authorization === '') {
-  // 	throw HttpError(401, 'No token provided');
-  // }
-
+ 
   const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer") {
     next(HttpError(401));
