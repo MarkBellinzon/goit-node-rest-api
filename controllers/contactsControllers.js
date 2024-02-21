@@ -2,7 +2,7 @@ const HttpError = require("../helpers/HttpError");
 const Contact = require("../model/contacts");
 
 const getAllContacts = async (req, res) => {
-  const {id: owner} = req.headers;
+  const {id: owner} = req.user;
   try {
     const contacts = await Contact.find({owner});
     res.status(200).json(contacts);
@@ -43,7 +43,7 @@ const deleteContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-  const {id: owner} = req.headers;
+  const {id: owner} = req.user;
   try {
     const { name, email, phone } = req.body;
     if (!name || !email || !phone) {

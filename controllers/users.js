@@ -3,9 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 // const HttpError = require("../helpers/HttpError");
-const {SECRET_KEY} = process.env;
+const { SECRET_KEY } = process.env;
 // console.log(SECRET_KEY);
-
 
 const getAllUsers = async (req, res) => {
   const users = await Users.find();
@@ -21,39 +20,40 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await Users.create({...req.body, password: hashPassword});
+  const newUser = await Users.create({ ...req.body, password: hashPassword });
   res.status(201).json(newUser);
 };
 
 const login = async (req, res) => {
-    const { email, password } = req.body;
-    const user = await Users.findOne({ email });
-    if (!user) {
-        return  res.status(401).json({ message: "Email or password invalid" });
-    }
-    const passwordCompare = await bcrypt.compare(password, user.password);
-    if(!passwordCompare){
-        return  res.status(401).json({ message: "Email or password invalid" });
-    }
+  const { email, password } = req.body;
+  const user = await Users.findOne({ email });
+  if (!user) {
+    return res.status(401).json({ message: "Email or password invalid" });
+  }
+  const passwordCompare = await bcrypt.compare(password, user.password);
+  if (!passwordCompare) {
+    return res.status(401).json({ message: "Email or password invalid" });
+  }
 
-    const payload = {
-        id: user._id,
-    };
+  const payload = {
+    id: user._id,
+  };
 
-    const token = jwt.sign(payload, SECRET_KEY, {expiresIn: "23h"});
-    user.token = token;
-    await user.save();
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+
+//   user.token = token;
+//  await user.save();
+
+  await Users.findByIdAndUpdate(user._id, { token });
+
     
-    res.json({
-        token,
-    })
-
-  
-}
-
+  res.json({
+    token,
+  });
+};
 
 module.exports = {
   register,
   getAllUsers,
   login,
-};
+}
