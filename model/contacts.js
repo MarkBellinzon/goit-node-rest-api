@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const {isValidById} = require("../helpers/isValidId");
+const {Schema, model} = require("mongoose");
 
 const contactSchema = new mongoose.Schema({
   name: {
@@ -16,10 +17,20 @@ const contactSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    require: true,
+  },
+  token: {
+    type: String,
+    default: "",
+  },
+
 }, {versionKeys: false});
 
 contactSchema.post("save", isValidById);
 
-const Contact = mongoose.model("Contact", contactSchema);
+const Contact = model("Contact", contactSchema);
 
 module.exports = Contact;

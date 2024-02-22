@@ -6,6 +6,7 @@ const cors = require("cors");
 // const isValidId = require("../helpers/isValidId");
 const contactsRouter = require("./routes/contactsRouter.js");
 const mongoose = require("mongoose");
+const authRouter = require("./routes/users.js")
 
 // const dotenv = require('dotenv');
 // dotenv.config();
@@ -34,6 +35,8 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
+
+app.use("/api/users", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((_, res) => {
@@ -44,6 +47,3 @@ app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message });
 });
-
-// const PORT = process.env.PORT || 3000;
-
