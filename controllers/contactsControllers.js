@@ -1,11 +1,11 @@
-const HttpError = require("../helpers/HttpError");
+// const HttpError = require("../helpers/HttpError");
 const Contact = require("../model/contacts");
 
 const getAllContacts = async (req, res) => {
   const { id: owner } = req.user;
-  const { page = 1, limit = 20 } = req.query;
-	const skip = (page - 1) * limit;
-    const contacts = await Contact.find({ owner }, "-createdAt -updatedAt", {skip, limit}).populate("owner", "name email");
+  // const { page = 1, limit = 20 } = req.query;
+	// const skip = (page - 1) * limit;
+    const contacts = await Contact.find({ owner });
     res.status(200).json(contacts);
   
 };

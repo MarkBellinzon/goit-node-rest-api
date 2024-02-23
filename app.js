@@ -1,5 +1,4 @@
 // rOpZvwVQkR6ipzdk
-
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -36,7 +35,7 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use("/api/users", authRouter);
+app.use("/users", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((_, res) => {
@@ -47,6 +46,3 @@ app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message });
 });
-
-
-
