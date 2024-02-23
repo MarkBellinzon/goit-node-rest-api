@@ -31,6 +31,6 @@ const contactSchema = new mongoose.Schema({
 
 contactSchema.post("save", isValidById);
 
-const Contact = mongoose.model("Contact", contactSchema);
+const Contact = model("Contact", contactSchema);
 
 module.exports = Contact;
