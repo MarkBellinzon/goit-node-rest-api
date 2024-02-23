@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 // const HttpError = require("../helpers/HttpError");
 const { SECRET_KEY } = process.env;
-// console.log(SECRET_KEY);
+
 
 const getAllUsers = async (req, res) => {
   const users = await Users.find();
