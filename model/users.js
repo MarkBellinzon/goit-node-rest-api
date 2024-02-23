@@ -49,6 +49,7 @@ const schemas = {
 };
 
 const Users = mongoose.model("Users", usersSchema);
+
 module.exports = {
   Users,
   schemas,
