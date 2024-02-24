@@ -36,8 +36,13 @@ const getOneContact = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deletedContact = await Contact.findByIdAndDelete(id);
+    const { _id } = req.user;
+    const { contactId } = req.params;
+
+    const deletedContact = await Contact.findByIdAndDelete({
+      _id: contactId,
+      owner: _id,
+    });
     if (!deletedContact) {
       res.status(404).json({ message: "Not found" });
       return;
