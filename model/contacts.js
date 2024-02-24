@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const {isValidById} = require("../helpers/isValidId");
 const {Schema, model} = require("mongoose");
+// const { Users } = require("../model/users");
 
 const contactSchema = new mongoose.Schema({
   name: {
@@ -19,7 +20,7 @@ const contactSchema = new mongoose.Schema({
   },
   owner: {
     type: Schema.Types.ObjectId,
-    ref: 'user',
+    ref: "Users",
     require: true,
   },
   token: {
