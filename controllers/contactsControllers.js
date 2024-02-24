@@ -6,11 +6,9 @@ const getAllContacts = async (req, res) => {
   const { page = 1, limit = 20, favorite } = req.query;
   const skip = (page - 1) * limit;
   const filterValue = favorite ? { owner: _id, favorite } : { owner: _id };
-  const contacts = await Contact.find( filterValue ).skip(skip).limit(limit);
-    res.status(200).json(contacts);
-
-  };
-  
+  const contacts = await Contact.find(filterValue).skip(skip).limit(limit);
+  res.status(200).json(contacts);
+};
 
 const getOneContact = async (req, res) => {
   try {
@@ -29,8 +27,13 @@ const getOneContact = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deletedContact = await Contact.findByIdAndDelete(id);
+    const { _id } = req.user;
+    const { contactId } = req.params;
+
+    const deletedContact = await Contact.findByIdAndDelete({
+      _id: contactId,
+      owner: _id,
+    });
     if (!deletedContact) {
       res.status(404).json({ message: "Not found" });
       return;
