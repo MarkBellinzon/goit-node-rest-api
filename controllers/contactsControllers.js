@@ -21,8 +21,8 @@ const getAllContacts = async (req, res) => {
 
 const getOneContact = async (req, res) => {
   try {
-    const { id } = req.params;
-    const contact = await Contact.findById(id);
+    const { _id: owner } = req.params;
+    const contact = await Contact.findById({owner: owner});
     if (!contact) {
       res.status(404).json({ message: "Not found" });
       return;
@@ -39,7 +39,7 @@ const deleteContact = async (req, res) => {
     const { _id } = req.user;
     const { contactId } = req.params;
 
-    const deletedContact = await Contact.findByIdAndDelete({
+    const deletedContact = await Contact.findOneAndDelete({
       _id: contactId,
       owner: _id,
     });
@@ -63,12 +63,23 @@ const createContact = async (req, res) => {
 const updateContact = async (req, res) => {
   try {
     const { id } = req.params;
+    const { userId } = req.user;
     const { name, email, phone } = req.body;
 
     if (!name && !email && !phone) {
       return res
         .status(400)
         .json({ message: "Body must have at least one field" });
+    }
+
+    const contact = await Contact.findById(id);
+    if (!contact) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    
+    if (contact.owner.toString() !== userId) {
+      return res.status(403).json({ message: "You do not have access to edit this contact"});
     }
 
     const updatedContact = await Contact.findByIdAndUpdate(id, req.body, {
@@ -88,13 +99,28 @@ const updateContact = async (req, res) => {
 const updateStatusContact = async (req, res) => {
   try {
     const { contactId } = req.params;
+    const { userId } = req.user;
     const { favorite } = req.body;
+
+    if (typeof favorite !== 'boolean') {
+      return res.status(400).json({ message: "The favorite field must be of boolean type" });
+    }
+
+    const contact = await Contact.findById(contactId);
+    if (!contact) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    
+    if (contact.owner.toString() !== userId) {
+      return res.status(403).json({ message: "You do not have access to change the status of this contact" });
+    }
 
     const updatedFields = { favorite };
 
     const updatedContact = await Contact.findByIdAndUpdate(
       contactId,
-      { $set: updatedFields },
+      updatedFields,
       { new: true }
     );
 
