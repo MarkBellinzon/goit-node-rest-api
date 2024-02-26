@@ -2,27 +2,26 @@
 const Contact = require("../model/contacts");
 
 const getAllContacts = async (req, res) => {
-  const { _id } = req.user;
+  const { id } = req.user;
 
   const { page = 1, limit = 20, favorite } = req.query;
   const skip = (page - 1) * limit;
 
-  const filterValue = favorite ? { owner: _id, favorite } : { owner: _id };
+  const filterValue = favorite ? { owner: id, favorite } : { owner: id };
 
   const contacts = await Contact.find(filterValue, "", {
     skip,
     limit,
   }).populate("owner", "email subscription");
-    res.status(200).json(contacts);
-
-  };
-
-
+  res.status(200).json(contacts);
+};
 
 const getOneContact = async (req, res) => {
+  const id = req.params.id;
+  const owner = req.user.id;
   try {
-    const { _id: owner } = req.params;
-    const contact = await Contact.findById({owner: owner});
+    // const { id: owner } = req.params;
+    const contact = await Contact.findById({ owner, id });
     if (!contact) {
       res.status(404).json({ message: "Not found" });
       return;
@@ -35,14 +34,13 @@ const getOneContact = async (req, res) => {
 };
 
 const deleteContact = async (req, res) => {
+  const id = req.params;
+  const owner = req.user.id;
   try {
-    const { _id } = req.user;
-    const { contactId } = req.params;
+    // const { id: owner } = req.user;
+    // const { id: contactId } = req.params;
 
-    const deletedContact = await Contact.findOneAndDelete({
-      _id: contactId,
-      owner: _id,
-    });
+    const deletedContact = await Contact.findOneAndDelete({ owner, id });
     if (!deletedContact) {
       res.status(404).json({ message: "Not found" });
       return;
@@ -63,7 +61,7 @@ const createContact = async (req, res) => {
 const updateContact = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.user;
+    const { owner } = req.user;
     const { name, email, phone } = req.body;
 
     if (!name && !email && !phone) {
@@ -77,9 +75,10 @@ const updateContact = async (req, res) => {
       return res.status(404).json({ message: "Not found" });
     }
 
-    
-    if (contact.owner.toString() !== userId) {
-      return res.status(403).json({ message: "You do not have access to edit this contact"});
+    if (contact.owner.toString() !== owner) {
+      return res
+        .status(403)
+        .json({ message: "You do not have access to edit this contact" });
     }
 
     const updatedContact = await Contact.findByIdAndUpdate(id, req.body, {
@@ -99,11 +98,13 @@ const updateContact = async (req, res) => {
 const updateStatusContact = async (req, res) => {
   try {
     const { contactId } = req.params;
-    const { userId } = req.user;
+    const { owner } = req.user;
     const { favorite } = req.body;
 
-    if (typeof favorite !== 'boolean') {
-      return res.status(400).json({ message: "The favorite field must be of boolean type" });
+    if (typeof favorite !== "boolean") {
+      return res
+        .status(400)
+        .json({ message: "The favorite field must be of boolean type" });
     }
 
     const contact = await Contact.findById(contactId);
@@ -111,9 +112,10 @@ const updateStatusContact = async (req, res) => {
       return res.status(404).json({ message: "Not found" });
     }
 
-    
-    if (contact.owner.toString() !== userId) {
-      return res.status(403).json({ message: "You do not have access to change the status of this contact" });
+    if (contact.owner.toString() !== owner) {
+      return res.status(403).json({
+        message: "You do not have access to change the status of this contact",
+      });
     }
 
     const updatedFields = { favorite };
