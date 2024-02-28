@@ -1,9 +1,9 @@
-const fs = require("fs/promises");
-// const path = require("path");
-const Contact = require("../model/contacts");
+// const fs = require("fs/promises");
+// // const path = require("path");
+// const Contact = require("../model/contacts");
 
-const crypto = require("crypto");
-const { error } = require("console");
+// const crypto = require("crypto");
+// const { error } = require("console");
 
 // const listContacts = async (req, res) => {
 //   const contacts = await Contact.find();
@@ -132,4 +132,4 @@ const { error } = require("console");
 //   }
 // };
 
-module.exports = {};
+// module.exports = {};

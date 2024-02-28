@@ -20,7 +20,7 @@ const contactSchema = new mongoose.Schema(
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "Users",
       require: true,
     },
     token: {
