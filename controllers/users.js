@@ -12,7 +12,7 @@ const { SECRET_KEY } = process.env;
 
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
-// const avatarsDir = path.join(__dirname, "../publik/avatars");
+// const avatarsDir = path.join(__dirname, "../../", "public", "avatars");
 
 const getAllUsers = async (req, res) => {
   const users = await Users.find();
@@ -32,11 +32,7 @@ const register = async (req, res) => {
 
     const avatarURL = gravatar.url(email);
 
-    const newUser = await Users.create({
-      email,
-      password: hashPassword,
-      avatarURL,
-    });
+    const newUser = await Users.create({ email, password: hashPassword, avatarURL });
 
     const userObject = {
       email: newUser.email,
@@ -48,6 +44,7 @@ const register = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -114,20 +111,22 @@ const logout = async (req, res) => {
 //   })
 // }
 
+
+
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
-  const { path: tmpUpload, originalname } = req.file;
+  const { path: tempUpload, originalname } = req.file;
 
   const extension = originalname.split(".").pop();
   const filename = `${_id}.${extension}`;
 
-  Jimp.read(tmpUpload, (err, image) => {
+  Jimp.read(tempUpload, (err, image) => {
     if (err) throw err;
     image.resize(250, 250).quality(60).write(`./public/avatars/${filename}`);
   });
 
   const resultUpload = path.join(avatarsDir, filename);
-  await fs.rename(tmpUpload, resultUpload);
+  await fs.rename(tempUpload, resultUpload);
 
   const avatarURL = path.join(`http://localhost:${PORT}/avatars`, filename);
   await Users.findByIdAndUpdate(_id, { avatarURL });
@@ -147,3 +146,4 @@ module.exports = {
   logout,
   updateAvatar,
 };
+

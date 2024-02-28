@@ -1,16 +1,11 @@
 const express = require("express");
-const validateBody = require("../middleware/validateBody.js");
-const { schemas } = require("../model/users.js");
+const validateBody  = require("../middleware/validateBody.js");
 const upload = require("../middleware/upload.js");
-const {
-  register,
-  getAllUsers,
-  login,
-  getCurrent,
-  logout,
-  updateAvatar,
-} = require("../controllers/users.js");
-const authenticate = require("../middleware/authenticate.js");
+const { schemas } = require("../model/users.js");
+// const {ctrl} = require("../helpers/ctrlWrapper.js");
+const { register, getAllUsers, login, getCurrent, logout, updateAvatar
+    } = require("../controllers/users.js");
+    const authenticate = require("../middleware/authenticate.js");
 
 const authRouter = express.Router();
 
@@ -25,11 +20,6 @@ authRouter.get("/current", authenticate, getCurrent);
 
 authRouter.post("/logout", authenticate, logout);
 
-authRouter.patch(
-  "/avatars",
-  authenticate,
-  upload.single("avatar"),
-  updateAvatar
-);
+authRouter.patch("/avatars", authenticate, upload.single("avatar"), updateAvatar);
 
 module.exports = authRouter;

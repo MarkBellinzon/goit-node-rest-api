@@ -12,7 +12,7 @@ const {
   updateContactSchema,
   updateFavoriteSchema,
 } = require("../schemas/contactsSchemas.js");
-const validateBody = require("../middleware/validateBody");
+const validateBody = require("../middleware/validateBody.js");
 const authenticate = require("../middleware/authenticate.js");
 // const {isValidById} = require("../helpers/isValidId");
 
@@ -24,23 +24,12 @@ contactsRouter.get("/:id", authenticate, getOneContact);
 
 contactsRouter.delete("/:id", authenticate, deleteContact);
 
-contactsRouter.post(
-  "/",
-  authenticate,
-  validateBody(createContactSchema),
-  createContact
-);
+contactsRouter.post("/", authenticate, validateBody(createContactSchema), createContact);
 
-contactsRouter.put(
-  "/:id",
-  authenticate,
-  validateBody(updateContactSchema),
-  updateContact
-);
+contactsRouter.put("/:id", authenticate, validateBody(updateContactSchema), updateContact);
 
 contactsRouter.patch(
-  "/:contactId/favorite",
-  authenticate,
+  "/:contactId/favorite", authenticate,
   validateBody(updateFavoriteSchema),
   updateStatusContact
 );
