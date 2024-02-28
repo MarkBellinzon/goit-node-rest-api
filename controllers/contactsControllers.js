@@ -2,18 +2,25 @@
 const Contact = require("../model/contacts");
 
 const getAllContacts = async (req, res) => {
-  const { id: owner } = req.user;
-  // const { page = 1, limit = 20 } = req.query;
-	// const skip = (page - 1) * limit;
-    const contacts = await Contact.find({ owner });
-    res.status(200).json(contacts);
-  
+  const { _id } = req.user;
+
+  const { page = 1, limit = 20, favorite } = req.query;
+  const skip = (page - 1) * limit;
+
+  const filterValue = favorite ? { owner: _id, favorite } : { owner: _id };
+
+  const contacts = await Contact.find(filterValue, "", {
+    skip,
+    limit,
+  }).populate("owner", "email subscription");
+  res.status(200).json(contacts);
 };
 
 const getOneContact = async (req, res) => {
+  const id = req.params.id;
+  const owner = req.user._id;
   try {
-    const { id } = req.params;
-    const contact = await Contact.findById(id);
+    const contact = await Contact.findOne({ id, owner });
     if (!contact) {
       res.status(404).json({ message: "Not found" });
       return;
@@ -26,9 +33,10 @@ const getOneContact = async (req, res) => {
 };
 
 const deleteContact = async (req, res) => {
+  const id = req.params.id;
+  const owner = req.user._id;
   try {
-    const { id } = req.params;
-    const deletedContact = await Contact.findByIdAndDelete(id);
+    const deletedContact = await Contact.findOneAndDelete({ owner, id });
     if (!deletedContact) {
       res.status(404).json({ message: "Not found" });
       return;
@@ -48,7 +56,8 @@ const createContact = async (req, res) => {
 
 const updateContact = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
+    const owner = req.user._id;
     const { name, email, phone } = req.body;
 
     if (!name && !email && !phone) {
@@ -57,9 +66,11 @@ const updateContact = async (req, res) => {
         .json({ message: "Body must have at least one field" });
     }
 
-    const updatedContact = await Contact.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const updatedContact = await Contact.findOneAndUpdate(
+      { id, owner },
+      req.body,
+      { new: true }
+    );
     if (!updatedContact) {
       return res.status(404).json({ message: "Not found" });
     }
@@ -74,13 +85,20 @@ const updateContact = async (req, res) => {
 const updateStatusContact = async (req, res) => {
   try {
     const { contactId } = req.params;
+    const owner = req.user._id;
     const { favorite } = req.body;
+
+    if (typeof favorite !== "boolean") {
+      return res
+        .status(400)
+        .json({ message: "The favorite field must be of boolean type" });
+    }
 
     const updatedFields = { favorite };
 
-    const updatedContact = await Contact.findByIdAndUpdate(
-      contactId,
-      { $set: updatedFields },
+    const updatedContact = await Contact.findOneAndUpdate(
+      { contactId, owner },
+      updatedFields,
       { new: true }
     );
 
