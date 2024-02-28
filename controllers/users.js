@@ -11,7 +11,7 @@ require("dotenv").config();
 const { SECRET_KEY } = process.env;
 // console.log(SECRET_KEY);
 
-const avatarsDir = path.join(__dirname, "..", "public", "avatars");
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 // const avatarsDir = path.join(__dirname, "../publik/avatars");
 
 const getAllUsers = async (req, res) => {
