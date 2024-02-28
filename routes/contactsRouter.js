@@ -12,7 +12,7 @@ const {
   updateContactSchema,
   updateFavoriteSchema,
 } = require("../schemas/contactsSchemas.js");
-const validateBody = require("../middleware/validateBody.js");
+const validateBody = require("../middleware/validateBody");
 const authenticate = require("../middleware/authenticate.js");
 // const {isValidById} = require("../helpers/isValidId");
 
