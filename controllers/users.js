@@ -32,7 +32,11 @@ const register = async (req, res) => {
 
     const avatarURL = gravatar.url(email);
 
-    const newUser = await Users.create({ email, password: hashPassword, avatarURL });
+    const newUser = await Users.create({
+      email,
+      password: hashPassword,
+      avatarURL,
+    });
 
     const userObject = {
       email: newUser.email,
@@ -44,7 +48,6 @@ const register = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -111,8 +114,6 @@ const logout = async (req, res) => {
 //   })
 // }
 
-
-
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
@@ -131,11 +132,9 @@ const updateAvatar = async (req, res) => {
   const avatarURL = path.join(`http://localhost:${PORT}/avatars`, filename);
   await Users.findByIdAndUpdate(_id, { avatarURL });
 
-  res.json({
-    status: "success",
-    code: 200,
-    data: { avatarURL },
-  });
+  res.json(
+   { avatarURL },
+  );
 };
 
 module.exports = {
@@ -146,4 +145,3 @@ module.exports = {
   logout,
   updateAvatar,
 };
-
