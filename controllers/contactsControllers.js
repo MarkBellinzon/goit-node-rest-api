@@ -15,6 +15,7 @@ const getAllContacts = async (req, res) => {
   }).populate("owner", "email subscription");
   res.status(200).json(contacts);
 };
+  
 
 const getOneContact = async (req, res) => {
   const id = req.params.id;
