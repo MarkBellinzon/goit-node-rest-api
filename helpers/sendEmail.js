@@ -1,48 +1,74 @@
 // vBJA3pA#iT!4JtV1
 
-const ElasticEmail = require("@elasticemail/elasticemail-client");
-const { response } = require("express");
+// const ElasticEmail = require("@elasticemail/elasticemail-client");
+// const { response } = require("express");
 // const { ApiClient } = require("@elasticemail/elasticemail-client");
-// const nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 // const { createTransport } = require("nodemailer");
 require("dotenv").config();
 
-const { ELASTIC_API_KEY, EMAIL_FROM } = process.env;
+const { META_PASSWORD } = process.env;
 
-const client = ElasticEmail.ApiClient.instance;
-const { apikey } = client.authentications;
-apikey.apiKey = ELASTIC_API_KEY;
-const emailsApi = new ElasticEmail.EmailsApi();
+const nodemailerconfig = {
+  host: "smtp.meta.ua",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "mb.goit@meta.ua",
+    pass: META_PASSWORD,
+  },
+};
 
-const sendEmail = ({ to, subject, html }) => {
-  const email = ElasticEmail.EmailMessageData.constructFromObject({
-    Recipients: [new ElasticEmail.EmailRecipient(to)],
-    Content: {
-      Body: [
-        ElasticEmail.BodyPart.constructFromObject({
-          ContentType: "HTML",
-          Content: html,
-        }),
-      ],
-      Subject: subject,
-      From: EMAIL_FROM,
-    },
-  });
+const transporter = nodemailer.createTransport(nodemailerconfig);
 
-  // eslint-disable-next-line space-before-function-paren
-  const callback = function (error, data, response) {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log("API called successfully.");
-    }
-  };
-
-  emailsApi.emailsPost(email, callback);
-  return true;
+const sendEmail = async (data) => {
+  const email = { ...data, from: "mb.goit@meta.ua" };
+  await transporter
+    .sendMail(email)
+    .then(() => {
+      console.log("Mail has been sended");
+    })
+    .catch((error) => console.log(error.message));
 };
 
 module.exports = sendEmail;
+
+// const { ELASTIC_API_KEY } = process.env;
+// console.error(ELASTIC_API_KEY);
+
+// const client = ElasticEmail.ApiClient.instance;
+// const { apikey } = client.authentications;
+// apikey.apiKey = "ELASTIC_API_KEY";
+// const emailsApi = new ElasticEmail.EmailsApi();
+
+// const sendEmail = ({ to, subject, html }) => {
+//   const email = ElasticEmail.EmailMessageData.constructFromObject({
+//     Recipients: [new ElasticEmail.EmailRecipient(to)],
+//     Content: {
+//       Body: [
+//         ElasticEmail.BodyPart.constructFromObject({
+//           ContentType: "HTML",
+//           Content: html,
+//         }),
+//       ],
+//       Subject: subject,
+//       From: "mb.goit@meta.ua",
+//     },
+//   });
+
+//   const callback = function (error, data, response) {
+//     if (error) {
+//       console.error(error);
+//     } else {
+//       console.log("API called successfully.");
+//     }
+//   };
+
+//   emailsApi.emailsPost(email, callback);
+//   return true;
+// };
+
+// module.exports = sendEmail;
 
 // const sendEmail = async (data) => {
 //   try {
