@@ -10,7 +10,7 @@ require("dotenv").config();
 const { v4: uuid } = require("uuid");
 const sendEmail = require("../helpers/sendEmail");
 
-// const HttpError = require("../helpers/HttpError");
+const HttpError = require("../helpers/HttpError");
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
@@ -51,11 +51,6 @@ const register = async (req, res) => {
 
     await sendEmail(verifyEmail);
 
-    // res.status(201).json({
-    //   email: newUser.email,
-    //   name: newUser.name,
-    // });
-
     const userObject = {
       email: newUser.email,
       subscription: newUser.subscription || "",
@@ -67,6 +62,44 @@ const register = async (req, res) => {
   }
 };
 
+const verifyEmail = async (req, res) => {
+  const { verificationToken } = req.params;
+  const user = await Users.findOne({ verificationToken });
+  if (!user) {
+    throw HttpError(401, "Email not found");
+  }
+  await Users.findByIdAndUpdate(user._id, {
+    verify: true,
+    verificationToken: "",
+  });
+
+  res.json({
+    message: "Email verify success",
+  });
+};
+
+const resendVerifyEmail = async (req, res) => {
+  const { email } = req.body;
+  const user = await Users.findOne({ email });
+  if (!user) {
+    throw HttpError(401, "Not found");
+  }
+  if (user.verify) {
+    throw HttpError(401, "Email already verify");
+  }
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
+
+  res.json({
+    message: "Verify email send success",
+  });
+};
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -74,6 +107,11 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "Email or password is wrong" });
     }
+
+    if (!user.verify) {
+      throw HttpError(401, "Email not verified");
+    }
+
     const passwordCompare = await bcrypt.compare(password, user.password);
     if (!passwordCompare) {
       return res.status(401).json({ message: "Email or password is wrong" });
@@ -117,21 +155,6 @@ const logout = async (req, res) => {
   res.status(204).json();
 };
 
-// const updateAvatar = async(req, res)=> {
-//   const {_id} = req.user;
-//   const {path: tempUpload, originalname} = req.file;
-//   const filename = `${_id}_${originalname}`;
-
-//   const resultUpload = path.join(avatarsDir, filename);
-//   await fs.rename(tempUpload, resultUpload);
-//   const avatarURL = path.join("avatars", filename);
-//   await Users.findByIdAndUpdate(_id, {avatarURL});
-
-//   res.json({
-//       avatarURL,
-//   })
-// }
-
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
@@ -160,4 +183,6 @@ module.exports = {
   getCurrent,
   logout,
   updateAvatar,
+  verifyEmail,
+  resendVerifyEmail,
 };
