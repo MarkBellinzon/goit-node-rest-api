@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 const mongooseError = require("../middleware/mongooseError");
 
+// const emailRegexp = /([\.-])*@\w+([\.-]?\w+)*(\.\+$/;
+
 const usersSchema = new mongoose.Schema(
   {
     password: {
@@ -48,6 +50,10 @@ const registerSchema = Joi.object({
   token: [Joi.string(), Joi.number()],
 });
 
+const emailSchema = Joi.object({
+  email: Joi.string().required(),
+});
+
 const loginSchema = Joi.object({
   password: Joi.string().min(3).max(255).required(),
   email: Joi.string().min(4).max(255).required().email(),
@@ -58,6 +64,7 @@ const loginSchema = Joi.object({
 const schemas = {
   registerSchema,
   loginSchema,
+  emailSchema,
 };
 
 const Users = mongoose.model("Users", usersSchema);
