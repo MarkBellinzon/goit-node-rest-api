@@ -7,12 +7,14 @@ const gravatar = require("gravatar");
 const Jimp = require("jimp");
 const { PORT } = process.env;
 require("dotenv").config();
-// const HttpError = require("../helpers/HttpError");
-const { SECRET_KEY } = process.env;
+const { v4: uuid } = require("uuid");
+const sendEmail = require("../helpers/sendEmail");
 
+// const HttpError = require("../helpers/HttpError");
+
+const { SECRET_KEY, BASE_URL } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
-// const avatarsDir = path.join(__dirname, "../../", "public", "avatars");
 
 const getAllUsers = async (req, res) => {
   const users = await Users.find();
@@ -32,11 +34,27 @@ const register = async (req, res) => {
 
     const avatarURL = gravatar.url(email);
 
+    const verificationToken = uuid();
+
     const newUser = await Users.create({
       email,
       password: hashPassword,
       avatarURL,
+      verificationToken,
     });
+
+    const verifyEmail = {
+      to: email,
+      subject: "Verify email",
+      html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click verify email</a>`,
+    };
+
+    await sendEmail(verifyEmail);
+
+    // res.status(201).json({
+    //   email: newUser.email,
+    //   name: newUser.name,
+    // });
 
     const userObject = {
       email: newUser.email,
@@ -132,9 +150,7 @@ const updateAvatar = async (req, res) => {
   const avatarURL = path.join(`http://localhost:${PORT}/avatars`, filename);
   await Users.findByIdAndUpdate(_id, { avatarURL });
 
-  res.json(
-   { avatarURL },
-  );
+  res.json({ avatarURL });
 };
 
 module.exports = {
